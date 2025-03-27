@@ -10,6 +10,8 @@ import androidx.annotation.Nullable;
 import androidx.annotation.RestrictTo;
 import androidx.annotation.VisibleForTesting;
 import androidx.media3.common.MediaItem;
+import androidx.media3.common.util.UnstableApi;
+import androidx.media3.exoplayer.DefaultRenderersFactory;
 import androidx.media3.exoplayer.ExoPlayer;
 import io.flutter.plugins.videoplayer.ExoPlayerEventListener;
 import io.flutter.plugins.videoplayer.ExoPlayerState;
@@ -41,6 +43,7 @@ public final class TextureVideoPlayer extends VideoPlayer
    * @param options options for playback.
    * @return a video player instance.
    */
+  @UnstableApi
   @NonNull
   public static TextureVideoPlayer create(
       @NonNull Context context,
@@ -54,8 +57,11 @@ public final class TextureVideoPlayer extends VideoPlayer
         asset.getMediaItem(),
         options,
         () -> {
+          DefaultRenderersFactory renderersFactory = new DefaultRenderersFactory(context);
+          renderersFactory.setEnableDecoderFallback(true);
           ExoPlayer.Builder builder =
               new ExoPlayer.Builder(context)
+                      .setRenderersFactory(renderersFactory)
                   .setMediaSourceFactory(asset.getMediaSourceFactory(context));
           return builder.build();
         });

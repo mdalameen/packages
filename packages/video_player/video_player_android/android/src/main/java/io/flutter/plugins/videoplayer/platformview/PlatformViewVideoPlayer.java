@@ -8,7 +8,11 @@ import android.content.Context;
 import androidx.annotation.NonNull;
 import androidx.annotation.VisibleForTesting;
 import androidx.media3.common.MediaItem;
+import androidx.media3.common.util.UnstableApi;
+import androidx.media3.exoplayer.DefaultRenderersFactory;
 import androidx.media3.exoplayer.ExoPlayer;
+
+import io.flutter.Log;
 import io.flutter.plugins.videoplayer.ExoPlayerEventListener;
 import io.flutter.plugins.videoplayer.VideoAsset;
 import io.flutter.plugins.videoplayer.VideoPlayer;
@@ -38,6 +42,7 @@ public class PlatformViewVideoPlayer extends VideoPlayer {
    * @param options options for playback.
    * @return a video player instance.
    */
+  @UnstableApi
   @NonNull
   public static PlatformViewVideoPlayer create(
       @NonNull Context context,
@@ -49,8 +54,12 @@ public class PlatformViewVideoPlayer extends VideoPlayer {
         asset.getMediaItem(),
         options,
         () -> {
+          DefaultRenderersFactory renderersFactory = new DefaultRenderersFactory(context);
+          renderersFactory.setEnableDecoderFallback(true);
+          Log.d("@@@","update setEnableDecoderFallback to true");
           ExoPlayer.Builder builder =
               new ExoPlayer.Builder(context)
+                      .setRenderersFactory(renderersFactory)
                   .setMediaSourceFactory(asset.getMediaSourceFactory(context));
           return builder.build();
         });

@@ -7,6 +7,8 @@ package io.flutter.plugins.videoplayer;
 import android.content.Context;
 import android.util.LongSparseArray;
 import androidx.annotation.NonNull;
+import androidx.media3.common.util.UnstableApi;
+
 import io.flutter.FlutterInjector;
 import io.flutter.Log;
 import io.flutter.embedding.engine.plugins.FlutterPlugin;
@@ -86,8 +88,10 @@ public class VideoPlayerPlugin implements FlutterPlugin, AndroidVideoPlayerApi {
     disposeAllPlayers();
   }
 
+  @UnstableApi
   @Override
   public @NonNull Long create(@NonNull CreateMessage arg) {
+    Log.d("@@@","reached video player plugin");
     final VideoAsset videoAsset;
     if (arg.getAsset() != null) {
       String assetLookupKey;
@@ -121,6 +125,7 @@ public class VideoPlayerPlugin implements FlutterPlugin, AndroidVideoPlayerApi {
 
     long id;
     VideoPlayer videoPlayer;
+    Log.d("@@@","reached video player plugin videtype: " +  arg.getViewType() + " platformview is " + Messages.PlatformVideoViewType.PLATFORM_VIEW);
     if (arg.getViewType() == Messages.PlatformVideoViewType.PLATFORM_VIEW) {
       id = nextPlatformViewPlayerId--;
       videoPlayer =
